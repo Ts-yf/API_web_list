@@ -1,8 +1,14 @@
 const express = require('express');
+const path = require('path'); // 新增路径模块
+
 const app = express();
 
-// 设置静态文件目录
-app.use(express.static('htdocs'));
+// 修正静态文件路径（使用绝对路径）
+app.use(express.static(path.join(__dirname, '../htdocs'))); // 重要改动！
 
-// 导出Vercel Serverless处理函数
+// 添加回退路由（支持SPA）
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../htdocs/index.html'));
+});
+
 module.exports = app;
